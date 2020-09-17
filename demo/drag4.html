@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>drag4</title>
+    <link rel="stylesheet" href="../css/reset.min.css" />
+    <style>
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+      }
+      .box {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 10;
+        width: 100px;
+        height: 100px;
+        background-color: lightblue;
+        cursor: move;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="box" draggable="true"></div>
+    <script>
+      let box = document.querySelector(".box");
+      let css = function (curEle, attr) {
+        return parseFloat(getComputedStyle(curEle)[attr]);
+      };
+      box.ondragstart = function (ev) {
+        this.startX = ev.pageX;
+        this.startY = ev.pageY;
+        this.startL = css(this, "left");
+        this.startT = css(this, "top");
+      };
+      box.ondrag = function (ev) {
+        let curL = ev.pageX - this.startX + this.startL;
+        let curT = ev.pageY - this.startY + this.startT;
+        let minL = 0,
+          minT = 0,
+          maxL = document.documentElement.clientWidth - this.offsetWidth,
+          maxT = document.documentElement.clientHeight - this.offsetHeight;
+        curL = curL < minL ? minL : curL > maxL ? maxL : curL;
+        curT = curT < minT ? minT : curT > maxT ? maxT : curT;
+
+        this.style.left = curL + "px";
+        this.style.top = curT + "px";
+      };
+      document.ondragover = function (ev) {
+        ev.preventDefault();
+      };
+    </script>
+  </body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>drag1</title>
+    <link rel="stylesheet" href="../css/reset.min.css">
+    <style>
+        html,body{
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+        .box{
+            position: absolute;
+            left: 0;
+            top:0;
+            width:356px;
+            height: 429px;
+            background-color: #ddd;
+        }
+        .box h2{
+            height: 56px;
+            background-color: #ccc;
+            cursor:move;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2></h2>
+    </div>
+    <script>
+        let box=document.querySelector('.box')
+
+        let css=function(curEle,attr){
+            return parseFloat(getComputedStyle(curEle)[attr])
+        }
+        let down=function(ev){
+            this.startX=ev.pageX;
+            this.startY=ev.pageY;
+            this.startL=css(this,'left')
+            this.startT=css(this,'top')
+            this._move=move.bind(this)
+            this._up=up.bind(this)
+            document.addEventListener('mousemove',this._move)
+            document.addEventListener('mouseup',this._up)
+        }
+        let move=function(ev){
+            let curL=ev.pageX-this.startX+this.startL;
+            let curT=ev.pageY-this.startY+this.startT;
+
+            let minL=0,
+                minT=0,
+                maxL=document.documentElement.clientWidth-this.offsetWidth,
+                maxT=document.documentElement.clientHeight-this.offsetHeight;
+            curL=curL<minL?minL:(curL>maxL?maxL:curL)
+            curT=curT<minT?minT:(curT>maxT?maxT:curT)
+            this.style.left=curL+'px';
+            this.style.top=curT+'px';
+        }
+        let up=function(ev){
+            document.removeEventListener('mousemove',this._move)
+            document.removeEventListener('mouseup',this._up)
+        }
+        box.addEventListener('mousedown',down)
+    </script>
+</body>
+</html=>

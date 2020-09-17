@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>drag插件</title>
+    <link rel="stylesheet" href="../css/reset.min.css">
+    <style>
+        html,body{
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+        .box{
+            position: absolute;
+            left: 0;
+            top:0;
+            width:356px;
+            height: 429px;
+            background-color: #ddd;
+        }
+        .box h2{
+            height: 56px;
+            background-color: #ccc;
+            cursor:move;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2></h2>
+    </div>
+    <script src="../js/drag-plugin.js"></script>
+    <script>
+        let box=document.querySelector('.box')
+        new Drag('.box h2',{
+            element:box,
+            boundary:false
+        })
+    </script>
+</body>
+</html=>

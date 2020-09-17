@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>html5-drag</title>
+    <link rel="stylesheet" href="../css/reset.min.css" />
+    <style>
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+      }
+      .box {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 10;
+        width: 100px;
+        height: 100px;
+        background-color: lightblue;
+        cursor: move;
+      }
+      .container {
+        position: relative;
+        box-sizing: border-box;
+        margin: 30px auto;
+        width: 300px;
+        height: 200px;
+        border: 2px solid lawngreen;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="box" draggable="true"></div>
+    <div class="container"></div>
+    <script>
+      let box = document.querySelector(".box");
+      let container = document.querySelector(".container");
+      box.ondragstart = function (ev) {
+        ev.dataTransfer.setData("@a", ev.target.className);
+      };
+      container.ondragover = function (ev) {
+        ev.preventDefault();
+      };
+      container.ondrop = function (ev) {
+        ev.preventDefault();
+        let _class = ev.dataTransfer.getData("@a"),
+          _ele = document.getElementsByClassName(_class)[0];
+        container.appendChild(_ele);
+      };
+    </script>
+  </body>
+</html>

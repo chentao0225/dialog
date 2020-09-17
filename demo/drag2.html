@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>drag2</title>
+    <link rel="stylesheet" href="../css/reset.min.css" />
+    <style>
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+      }
+      .box {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 10;
+        width: 100px;
+        height: 100px;
+        cursor: move;
+        background-color: lavender;
+      }
+      .container {
+        position: relative;
+        box-sizing: border-box;
+        margin: 30px auto;
+        width: 300px;
+        height: 200px;
+        border: 2px solid lightgreen;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="box"></div>
+    <div class="container"></div>
+    <script>
+      let box = document.querySelector(".box"),
+        container = document.querySelector(".container");
+      let css = function (curEle, attr) {
+        return parseFloat(getComputedStyle(curEle)[attr]);
+      };
+
+      let down = function (ev) {
+        this.startX = ev.pageX;
+        this.startY = ev.pageY;
+        this.startL = css(this, "left");
+        this.startT = css(this, "top");
+        this._move = move.bind(this);
+        this._up = up.bind(this);
+        document.addEventListener("mousemove", this._move);
+        document.addEventListener("mouseup", this._up);
+      };
+      let move = function (ev) {
+        let curL = ev.pageX - this.startX + this.startL;
+        let curT = ev.pageY - this.startY + this.startT;
+        let minL = 0,
+          minT = 0,
+          maxL = document.documentElement.clientWidth - this.offsetWidth,
+          maxT = document.documentElement.clientHeight - this.offsetHeight;
+        curL = curL < minL ? minL : curL > maxL ? maxL : curL;
+        curT = curT < minT ? minT : curT > maxT ? maxT : curT;
+        this.style.left = curL + "px";
+        this.style.top = curT + "px";
+      };
+      let up = function (ev) {
+        document.removeEventListener("mousemove", this._move);
+        document.removeEventListener("mouseup", this._up);
+
+        let minL = container.offsetLeft,
+          minT = container.offsetTop,
+          maxL = minL + container.offsetWidth - this.offsetWidth;
+        maxT = minT + container.offsetHeight - this.offsetHeight;
+        curL = css(this, "left");
+        curT = css(this, "top");
+
+        if (curL >= minL && curL <= maxL && curT >= minT && curT <= maxT) {
+          container.appendChild(this);
+          this.style.left = 0;
+          this.style.top = 0;
+          this.removeEventListener("mousedown", down);
+          return;
+        }
+
+        this.style.left = this.startL + "px";
+        this.style.top = this.startT + "px";
+      };
+      box.addEventListener("mousedown", down);
+    </script>
+  </body>
+</html>
